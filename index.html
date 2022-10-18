@@ -15,16 +15,38 @@
             background-color: aquamarine;
             font-size: 33px;
             font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <button onclick="accessToMetamask()">CONNECT METAMASK</button> <br>
+    <script>
+        var web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+        async function accessToMetamask() {
+            const onboardButton = document.getElementById('connectButton');
+
+            const isMetaMaskInstalled = () => {
+                const { ethereum } = window;
+                return Boolean(ethereum && ethereum.isMetaMask);
+            };
+
+            const MetaMaskClientCheck = () => {
+                if (!isMetaMaskInstalled()) {
+                    onboardButton.innerText = 'Click here to install MetaMask!';
+                } else {
+                    window.ethereum.request({ method: "eth_requestAccounts" });
+                    window.web3 = new Web3(window.ethereum);
+                    const account = web3.eth.accounts;
+                    const walletAddress = account.givenProvider.selectedAddress;
+                    console.log(`Wallet: ${walletAddress}`);
+                }
+            };
+            MetaMaskClientCheck();
+        }
+    </script>
+    <button id="connectButton" onclick="accessToMetamask()">CONNECT METAMASK</button> <br>
     <p id="accountArea"></p>
-
-
-
     <script>
 
     </script>
